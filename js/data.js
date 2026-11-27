@@ -119,6 +119,7 @@ window.PORTFOLIO_DATA = {
         }
       ],
       poster: 'assets/images/mias-wild-wonderland-cover.jpg',
+      thumb: 'assets/images/thumbs/mias-wild-wonderland-cover.webp',
       posterCaption: "《Mia's Wild Wonderland》官方竖版主视觉海报（含 EP01 & EP02 双集先导成片）。",
       stills: [
         'assets/images/mias-wild-wonderland-still-1.jpg',
@@ -183,6 +184,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/the-king-of-sorrow.mp4',
       poster: 'assets/images/the-king-of-sorrow-cover.jpg',
+      thumb: 'assets/images/thumbs/the-king-of-sorrow-cover.webp',
       posterCaption: '《THE KING OF SORROW》暗黑奇幻竖版官方封面。',
       stills: [
         'assets/images/the-king-of-sorrow-still-1.jpg',
@@ -237,6 +239,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/ceo-sweet-punishment-ep53.mp4',
       poster: 'assets/images/ceo-sweet-punishment-ep53-cover.jpg',
+      thumb: 'assets/images/thumbs/ceo-sweet-punishment-ep53-cover.webp',
       posterCaption: "《The CEO's Sweet Punishment EP53》竖版官方海报。",
       stills: [
         'assets/images/ceo-sweet-punishment-ep53-still-1.jpg',
@@ -291,6 +294,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/xianmen.mp4',
       poster: 'assets/images/xianmen-cover.jpg',
+      thumb: 'assets/images/thumbs/xianmen-cover.webp',
       posterCaption: '《仙门偏养反骨人》第一集 16:9 横版官方海报。',
       stills: [
         'assets/images/xianmen-still-1.jpg',
@@ -345,6 +349,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/xian.mp4',
       poster: 'assets/images/xian-cover.jpg',
+      thumb: 'assets/images/thumbs/xian-cover.webp',
       posterCaption: '《噩梦 ——〈陷〉》官方海报 · 导演：郜维佳。',
       stills: [
         'assets/images/xian-still-1.jpg',
@@ -399,6 +404,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/yemiao.mp4',
       poster: 'assets/images/yemiao-cover.jpg',
+      thumb: 'assets/images/thumbs/yemiao-cover.webp',
       posterCaption: '《野庙》横版武侠概念海报。',
       stills: [
         'assets/images/yemiao-still-1.jpg',
@@ -453,6 +459,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/sanjie.mp4',
       poster: 'assets/images/sanjie-cover.jpg',
+      thumb: 'assets/images/thumbs/sanjie-cover.webp',
       posterCaption: '《三界绒游记》官方毛毡风格横版海报 · 制作组：GHZ。',
       stills: [
         'assets/images/sanjie-still-1.jpg',
@@ -507,6 +514,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/chunri-laixin.mp4',
       poster: 'assets/images/chunri-laixin-cover.jpg',
+      thumb: 'assets/images/thumbs/chunri-laixin-cover.webp',
       posterCaption: '《春日来信》林夏 × 许屿 · 青春短片官方封面。',
       stills: [
         'assets/images/chunri-laixin-still-1.jpg',
@@ -562,6 +570,7 @@ window.PORTFOLIO_DATA = {
       ],
       video: 'media/rexue-qingchun.mp4',
       poster: 'assets/images/rexue-qingchun-cover.jpg',
+      thumb: 'assets/images/thumbs/rexue-qingchun-cover.webp',
       posterCaption: '《热血青春》横版燃向官方海报。',
       stills: [
         'assets/images/rexue-qingchun-still-1.jpg',

@@ -201,6 +201,15 @@
     return work.video ? work.resolution || '高清正片' : '即将上线';
   }
 
+  /* 首屏自动播放的静音预览：手机 / 省流量 / 2G-3G 下不自动拉正片，
+     先给一张海报，用户点击后再进播放器（移动端最贵的一次请求就是那个 13 MB 的视频）。 */
+  function shouldAutoplayHeroVideo() {
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+    if (conn.saveData) return false;
+    if (/slow-2g|2g|3g/.test(conn.effectiveType || '')) return false;
+    return window.matchMedia('(min-width: 860px)').matches;
+  }
+
   /* ---- 尚未挂载片源时的占位控制器 ---- */
   function createUnavailableController($mount, work, options) {
     const media = site.media || {};
@@ -266,7 +275,7 @@
     $mount.innerHTML = `
       <div class="cinema-player is-paused ${isVert ? 'is-vertical-stage' : 'is-landscape-stage'}" tabindex="0">
         <div class="cinema-stage">
-          <video class="cinema-video" playsinline webkit-playsinline="true" x5-playsinline="true" x5-video-player-type="h5-page" preload="metadata"></video>
+          <video class="cinema-video" playsinline webkit-playsinline="true" x5-playsinline="true" x5-video-player-type="h5-page" preload="none"></video>
           <button type="button" class="cinema-center-play" aria-label="播放影片">${SVG.play}</button>
           <div class="cinema-hud" aria-live="polite"></div>
         </div>
@@ -671,7 +680,7 @@
     const ctx = $gateCanvas.getContext('2d');
     const thumbs = works.map((w) => {
       const img = new Image();
-      img.src = w.poster || w.stills[0] || '';
+      img.src = w.thumb || w.poster || w.stills[0] || '';
       return img;
     });
 
@@ -1315,12 +1324,13 @@
     const thumbBg = work.stills[0] || work.poster || '';
     const hasEps = work.episodes && work.episodes.length > 0;
     const previewMode = resolveWorkMediaMode(work);
+    const heroVideo = previewMode === 'local' && shouldAutoplayHeroVideo();
 
     const filmstripHtml = works
       .map(
         (w, i) => `
         <button type="button" class="fs-item ${i === state.activeWorkIndex ? 'is-active' : ''}" data-fs-idx="${i}" aria-label="切换至 ${escapeHtml(w.title)}">
-          <img src="${w.poster || w.stills[0]}" alt="" />
+          <img src="${w.thumb || w.poster || w.stills[0]}" alt="" loading="lazy" decoding="async" />
           <span>${w.num}</span>
         </button>`
       )
@@ -1356,7 +1366,7 @@
             <div class="pv-bg-blur" style="background-image:url('${thumbBg}')"></div>
             <div class="pv ${isVert ? 'is-vertical' : ''}">
               ${
-                previewMode === 'local'
+                heroVideo
                   ? `<video id="home-preview-video" poster="${thumbBg}" muted loop playsinline autoplay preload="metadata"></video>`
                   : `<button type="button" class="pv-poster" id="home-poster-btn" aria-label="播放 ${escapeHtml(work.title)}">
                        <img src="${thumbBg}" alt="${escapeHtml(work.title)} 主视觉" />

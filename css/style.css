@@ -21,8 +21,10 @@
   --hdr-h: 76px;
   --app-vh: 100svh;
 
-  --f-display: "Anton", "Noto Serif SC", "Songti SC", "STSong", serif;
-  --f-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  /* 中文衬线走系统字体：iOS/macOS 为 Songti SC，Windows 为 SimSun，安卓回退默认衬线。
+     不再远程加载 Noto Serif SC —— 中文 webfont 会拖走 ~1 MB，是移动端首屏卡顿的主因。 */
+  --f-display: "Anton", "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+  --f-serif: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
   --f-sans: -apple-system, BlinkMacSystemFont, "HarmonyOS Sans SC", "HarmonyOS Sans", "PingFang SC", "MiSans", "Hiragino Sans GB", "Microsoft YaHei", "Roboto", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "Courier Prime", "Courier New", Consolas, monospace;
 
@@ -3890,4 +3892,16 @@ img, video {
   color: var(--fg);
   background: rgba(10, 10, 12, 0.62);
   border: 1px solid rgba(239, 233, 223, 0.24);
+}
+
+/* 手机端：海报只做背景，播放入口交给下方「播放」按钮，避免盖住首屏信息的点击 */
+@media (max-width: 860px) {
+  .pv-poster {
+    pointer-events: none;
+  }
+
+  .pv-poster-play,
+  .pv-poster-tip {
+    display: none;
+  }
 }
