@@ -5,7 +5,8 @@
  * 说明：
  * 1. 本文件是全站唯一的数据源，采用 window.PORTFOLIO_DATA 全局挂载，
  *    确保直接双击 index.html（file:// 协议）或部署至国内静态服务器均可零报错运行。
- * 2. 全部 10 支成片视频均由原文件 1:1 零压缩直接拷贝至 assets/videos/，保留原画质与音轨。
+ * 2. 线上播放的 10 支成片为网页转码版（H.264 High + AAC + faststart），放在 media/ 目录；
+ *    分辨率与帧率与原片一致，码率按网页播放优化。原始母版保留在 assets/videos/（不进仓库）。
  * 3. 如在中国大陆正式上线并绑定自定义域名，请在 site.icp 中填入工信部备案号；留空则隐藏。
  * ============================================================================
  */
@@ -47,38 +48,20 @@ window.PORTFOLIO_DATA = {
     icp: '',
 
     /* ------------------------------------------------------------------
-     * 线上播放源配置（GitHub Pages / 自定义域名部署用）
+     * 线上播放源配置
      * ------------------------------------------------------------------
-     * mode 可选值：
-     *   'auto'     —— 本地双击 index.html 或 localhost 预览时，自动播放仓库内
-     *                 assets/videos 原片；部署到线上后自动切换为 B 站嵌入。
-     *   'local'    —— 始终播放仓库内视频（把 mp4 一起上传时用，注意 GitHub
-     *                 单文件 100 MB 上限）。
-     *   'bilibili' —— 始终使用 B 站嵌入，即使本地预览。
+     * mode:
+     *   'local' —— 播放仓库内 media/ 里的网页转码版（当前方案）
+     *   'none'  —— 关闭在线播放，只显示海报与占位文案
      *
-     * bilibili：填入每部作品的 B 站 BV 号即可上线播放，键名 = 作品的 slug。
-     *   单集作品：'xianmen': 'BV1xx411c7mD'
-     *   多集作品：'mias-wild-wonderland': 'BV...'（第 1 集）
-     *             'mias-wild-wonderland#2': 'BV...'（第 2 集）
-     *   需要指定分 P 时用对象写法：{ bvid: 'BV1xx411c7mD', page: 2 }
+     * 10 支成片以 H.264 High + AAC 转码进仓库：分辨率/帧率与原片一致，
+     * 码率按网页播放优化（原片 8–16 Mbps → 网页版约 1–3 Mbps）。
+     * 原始母版仍在 assets/videos/，不进仓库、不影响线上。
      * ------------------------------------------------------------------ */
     media: {
-      mode: 'auto',
-      bilibiliBadge: 'B 站 · 高清正片',
+      mode: 'local',
       placeholderTitle: '影片即将上线',
-      placeholderDesc: '成片正在 B 站挂载，稍后可在此直接观看。',
-      bilibili: {
-        // 'mias-wild-wonderland': 'BV1xxxxxxxxx',
-        // 'mias-wild-wonderland#2': 'BV1xxxxxxxxx',
-        // 'the-king-of-sorrow': 'BV1xxxxxxxxx',
-        // 'ceo-sweet-punishment-ep53': 'BV1xxxxxxxxx',
-        // 'xianmen': 'BV1xxxxxxxxx',
-        // 'xian': 'BV1xxxxxxxxx',
-        // 'yemiao': 'BV1xxxxxxxxx',
-        // 'sanjie': 'BV1xxxxxxxxx',
-        // 'chunri-laixin': 'BV1xxxxxxxxx',
-        // 'rexue-qingchun': 'BV1xxxxxxxxx'
-      }
+      placeholderDesc: '该片的网页版正在转码，稍后可在此直接观看。'
     }
   },
 
@@ -110,11 +93,11 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '海外竖屏 AI 短剧 · 双集项目（EP01 + EP02）' },
-        { role: '原画规格', name: '1080×1920 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '1080×1920 · 30fps 原片画幅' },
         { role: '分集时长', name: '第一集 00:56 · 第二集 01:04' }
       ],
       platformNote: '本项目包含第一集（EP01）与第二集（EP02）两支完整成片，页面内任意分集按钮均可一键独立切换播放',
-      video: 'assets/videos/mias-wild-wonderland-ep01.mp4',
+      video: 'media/mias-wild-wonderland-ep01.mp4',
       episodes: [
         {
           num: 'EP01',
@@ -123,7 +106,7 @@ window.PORTFOLIO_DATA = {
           enTitle: 'EPISODE 01 · THE WHITE TIGER',
           duration: '00:56',
           thumb: 'assets/images/mias-wild-wonderland-still-1.jpg',
-          video: 'assets/videos/mias-wild-wonderland-ep01.mp4'
+          video: 'media/mias-wild-wonderland-ep01.mp4'
         },
         {
           num: 'EP02',
@@ -132,7 +115,7 @@ window.PORTFOLIO_DATA = {
           enTitle: 'EPISODE 02 · WONDERLAND RISING',
           duration: '01:04',
           thumb: 'assets/images/mias-wild-wonderland-still-4.jpg',
-          video: 'assets/videos/mias-wild-wonderland-ep02.mp4'
+          video: 'media/mias-wild-wonderland-ep02.mp4'
         }
       ],
       poster: 'assets/images/mias-wild-wonderland-cover.jpg',
@@ -195,10 +178,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '海外竖屏 AI 短剧 · 9:16' },
-        { role: '原画规格', name: '544×960 · 28fps 无压缩原片' },
+        { role: '原画规格', name: '544×960 · 28fps 原片画幅' },
         { role: '成片时长', name: '2 分 20 秒' }
       ],
-      video: 'assets/videos/the-king-of-sorrow.mp4',
+      video: 'media/the-king-of-sorrow.mp4',
       poster: 'assets/images/the-king-of-sorrow-cover.jpg',
       posterCaption: '《THE KING OF SORROW》暗黑奇幻竖版官方封面。',
       stills: [
@@ -249,10 +232,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '海外竖屏 AI 短剧 · 9:16' },
-        { role: '原画规格', name: '1080×1920 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '1080×1920 · 30fps 原片画幅' },
         { role: '成片时长', name: '1 分 09 秒' }
       ],
-      video: 'assets/videos/ceo-sweet-punishment-ep53.mp4',
+      video: 'media/ceo-sweet-punishment-ep53.mp4',
       poster: 'assets/images/ceo-sweet-punishment-ep53-cover.jpg',
       posterCaption: "《The CEO's Sweet Punishment EP53》竖版官方海报。",
       stills: [
@@ -303,10 +286,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '横屏 AI 仙侠短片 · 16:9' },
-        { role: '原画规格', name: '1920×1080 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '1920×1080 · 30fps 原片画幅' },
         { role: '成片时长', name: '2 分 29 秒' }
       ],
-      video: 'assets/videos/xianmen.mp4',
+      video: 'media/xianmen.mp4',
       poster: 'assets/images/xianmen-cover.jpg',
       posterCaption: '《仙门偏养反骨人》第一集 16:9 横版官方海报。',
       stills: [
@@ -357,10 +340,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '横屏 AI 悬疑短片 · 16:9' },
-        { role: '原画规格', name: '1920×1080 · 25fps 无压缩原片' },
+        { role: '原画规格', name: '1920×1080 · 25fps 原片画幅' },
         { role: '成片时长', name: '1 分 40 秒' }
       ],
-      video: 'assets/videos/xian.mp4',
+      video: 'media/xian.mp4',
       poster: 'assets/images/xian-cover.jpg',
       posterCaption: '《噩梦 ——〈陷〉》官方海报 · 导演：郜维佳。',
       stills: [
@@ -411,10 +394,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '横屏 AI 武侠短片 · 16:9' },
-        { role: '原画规格', name: '854×480 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '854×480 · 30fps 原片画幅' },
         { role: '成片时长', name: '2 分 41 秒' }
       ],
-      video: 'assets/videos/yemiao.mp4',
+      video: 'media/yemiao.mp4',
       poster: 'assets/images/yemiao-cover.jpg',
       posterCaption: '《野庙》横版武侠概念海报。',
       stills: [
@@ -465,11 +448,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 制作组', name: '郜维佳 · 制作组：GHZ' },
         { role: '作品形态', name: '横屏 AI 毛毡动画短片 · 16:9' },
-        { role: '原画规格', name: '1920×1080 · 30fps 原画直出' },
+        { role: '原画规格', name: '1920×1080 · 30fps 原片画幅' },
         { role: '成片时长', name: '1 分 29 秒' }
       ],
-      video: 'assets/videos/sanjie.mp4',
-      fallbackVideo: 'assets/videos/sanjie-compat.mp4',
+      video: 'media/sanjie.mp4',
       poster: 'assets/images/sanjie-cover.jpg',
       posterCaption: '《三界绒游记》官方毛毡风格横版海报 · 制作组：GHZ。',
       stills: [
@@ -520,10 +502,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '横屏 AI 青春短片 · 16:9' },
-        { role: '原画规格', name: '968×544 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '968×544 · 30fps 原片画幅' },
         { role: '成片时长', name: '2 分 02 秒' }
       ],
-      video: 'assets/videos/chunri-laixin.mp4',
+      video: 'media/chunri-laixin.mp4',
       poster: 'assets/images/chunri-laixin-cover.jpg',
       posterCaption: '《春日来信》林夏 × 许屿 · 青春短片官方封面。',
       stills: [
@@ -575,10 +557,10 @@ window.PORTFOLIO_DATA = {
       credits: [
         { role: '导演 / 主创', name: '郜维佳（22 岁）' },
         { role: '作品形态', name: '横屏音乐 MV · 16:9' },
-        { role: '原画规格', name: '1280×720 · 30fps 无压缩原片' },
+        { role: '原画规格', name: '1280×720 · 30fps 原片画幅' },
         { role: '成片时长', name: '2 分 56 秒' }
       ],
-      video: 'assets/videos/rexue-qingchun.mp4',
+      video: 'media/rexue-qingchun.mp4',
       poster: 'assets/images/rexue-qingchun-cover.jpg',
       posterCaption: '《热血青春》横版燃向官方海报。',
       stills: [

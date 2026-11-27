@@ -6,7 +6,7 @@
  * 2. 首页粘性首屏 + 胶片条切换 + Mia's Wild Wonderland 双集独立按钮
  * 3. 页面内嵌影院播放器 + 弹窗影院播放器统一控制器
  *    （播放/暂停、后退10s、前进10s、可拖拽进度条与悬浮时间气泡、选集、音量滑块、倍速、画中画、全屏）
- * 4. 原画无损直出 + 三界绒游记 HEVC 浏览器自动回退保障
+ * 4. 仓库内网页版成片直出（H.264 转码，原生 video 播放）
  * ============================================================================
  */
 (function () {
@@ -187,132 +187,18 @@
   }
 
   /* ========================================================================
-     播放源路由：仓库内原片 / B 站嵌入 / 暂无片源
-     说明：线上部署时视频不进仓库（GitHub 单文件上限 100 MB），
-           通过 site.media.bilibili 里的 BV 号以官方 iframe 播放器嵌入。
+     播放源：仓库内网页版成片（media/）/ 暂无片源
+     说明：成片以 H.264 转码后随仓库发布，线上直接用原生 <video> + 自研影院控制栏。
      ======================================================================== */
 
-  function isLocalPreview() {
-    const { protocol, hostname } = window.location;
-    if (protocol === 'file:') return true;
-    if (!hostname) return true;
-    return (
-      hostname === 'localhost' ||
-      hostname === '127.0.0.1' ||
-      hostname === '::1' ||
-      hostname === '[::1]' ||
-      /^10\./.test(hostname) ||
-      /^192\.168\./.test(hostname) ||
-      /^172\.(1[6-9]|2\d|3[01])\./.test(hostname) ||
-      /\.local$/i.test(hostname)
-    );
-  }
-
-  function bilibiliEntry(work, epIndex) {
-    const table = (site.media && site.media.bilibili) || {};
-    const base = work.slug || work.id;
-    const key = epIndex > 0 ? `${base}#${epIndex + 1}` : base;
-    const raw = table[key];
-    if (!raw) return null;
-    const bvid = typeof raw === 'string' ? raw.trim() : String(raw.bvid || '').trim();
-    if (!bvid) return null;
-    return { bvid, page: typeof raw === 'string' ? 1 : Number(raw.page) || 1 };
-  }
-
-  function bilibiliEmbedUrl(entry) {
-    if (!entry) return '';
-    return (
-      'https://player.bilibili.com/player.html?isOutside=true' +
-      `&bvid=${encodeURIComponent(entry.bvid)}` +
-      `&page=${entry.page || 1}` +
-      '&high_quality=1&danmaku=0&autoplay=0'
-    );
-  }
-
-  function bilibiliWatchUrl(entry) {
-    if (!entry) return 'https://www.bilibili.com/';
-    return `https://www.bilibili.com/video/${entry.bvid}${entry.page > 1 ? `?p=${entry.page}` : ''}`;
-  }
-
   function resolveWorkMediaMode(work) {
-    const mode = window.PORTFOLIO_MEDIA_MODE || (site.media && site.media.mode) || 'auto';
-    const hasLocal = Boolean(work.video);
-    const hasBili = Boolean(bilibiliEntry(work, 0));
-    if (mode === 'local') return hasLocal ? 'local' : 'none';
-    if (mode === 'bilibili') return hasBili ? 'bilibili' : 'none';
-    if (isLocalPreview() && hasLocal) return 'local'; // 本地预览优先原片
-    return hasBili ? 'bilibili' : 'none';
+    const mode = window.PORTFOLIO_MEDIA_MODE || (site.media && site.media.mode) || 'local';
+    if (mode === 'none') return 'none';
+    return work.video ? 'local' : 'none';
   }
 
   function playSourceBadge(work) {
-    const mode = resolveWorkMediaMode(work);
-    if (mode === 'bilibili') return (site.media && site.media.bilibiliBadge) || 'B 站 · 高清正片';
-    if (mode === 'none') return '即将上线';
-    return work.resolution || '原画直出';
-  }
-
-  /* ---- B 站官方嵌入播放器（iframe）控制器 ---- */
-  function createBilibiliEmbedController($mount, work, options) {
-    const badge = (site.media && site.media.bilibiliBadge) || 'B 站 · 高清正片';
-    let curEpIndex = options.epIndex || 0;
-    let stopped = false;
-
-    $mount.innerHTML = `
-      <div class="cinema-player is-bili is-landscape-stage" tabindex="0">
-        <div class="cinema-stage">
-          <iframe class="cinema-embed" src="about:blank" title="${escapeHtml(work.title)} · B 站在线播放"
-            frameborder="0" scrolling="no" allowfullscreen="true" webkitallowfullscreen="true"
-            allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-        </div>
-        <div class="vctrl vctrl-bili">
-          <div class="vctrl-row">
-            <div class="vctrl-left">
-              <span class="vctrl-badge">${escapeHtml(badge)}</span>
-              <span class="bili-note">画质 / 倍速 / 弹幕 / 全屏请在播放器内操作</span>
-            </div>
-            <div class="vctrl-right">
-              <a class="bili-open" href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">在 B 站打开 ↗</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    const $iframe = $mount.querySelector('.cinema-embed');
-    const $openLink = $mount.querySelector('.bili-open');
-
-    function applyEpisode(epIdx) {
-      curEpIndex = epIdx || 0;
-      const entry = bilibiliEntry(work, curEpIndex);
-      const url = bilibiliEmbedUrl(entry);
-      stopped = !url;
-      $iframe.src = url || 'about:blank';
-      $openLink.href = bilibiliWatchUrl(entry);
-      $openLink.hidden = !entry;
-      if (typeof options.onEpisodeChange === 'function') options.onEpisodeChange(curEpIndex);
-    }
-
-    applyEpisode(curEpIndex);
-
-    return {
-      loadEpisode: (epIdx) => applyEpisode(epIdx || 0),
-      seekBy: () => showToast('进度请直接在 B 站播放器内拖动'),
-      togglePlay: () => showToast('请点击画面中的播放按钮'),
-      pause: () => {
-        if (stopped) return;
-        stopped = true;
-        $iframe.src = 'about:blank'; // 停止嵌入播放，避免与弹窗播放器叠音
-      },
-      restore: () => {
-        if (stopped) applyEpisode(curEpIndex);
-      },
-      destroy: () => {
-        $iframe.src = 'about:blank';
-        $mount.innerHTML = '';
-      },
-      getVideoEl: () => null,
-      getEpisodeIndex: () => curEpIndex
-    };
+    return work.video ? work.resolution || '高清正片' : '即将上线';
   }
 
   /* ---- 尚未挂载片源时的占位控制器 ---- */
@@ -367,7 +253,6 @@
   function createCinemaPlayerController($mount, work, opts) {
     const options = opts || {};
     const mode = resolveWorkMediaMode(work);
-    if (mode === 'bilibili') return createBilibiliEmbedController($mount, work, options);
     if (mode === 'none') return createUnavailableController($mount, work, options);
     return createNativeVideoController($mount, work, options);
   }
@@ -401,7 +286,7 @@
               <span class="vctrl-time">00:00 / 00:00</span>
             </div>
             <div class="vctrl-right">
-              <span class="vctrl-badge">${escapeHtml(work.resolution || '原画直出')}</span>
+              <span class="vctrl-badge">${escapeHtml(work.resolution || '高清正片')}</span>
               <div class="vctrl-vol">
                 <button type="button" class="vc-btn vc-mute" aria-label="静音或取消静音">${SVG.vol}</button>
                 <input type="range" class="vctrl-vol-range" min="0" max="1" step="0.05" value="1" aria-label="音量调节" />
@@ -1460,7 +1345,7 @@
             .join('')}
         </div>`
       : `<button type="button" class="btn btn-accent" id="home-watch-btn">
-          <span>▶ ${previewMode === 'local' ? '观看影片（原画）' : '在线观看影片'}</span>
+          <span>▶ ${previewMode === 'local' ? '观看影片（高清）' : '在线观看影片'}</span>
         </button>`;
 
     $app.innerHTML = `
@@ -2189,7 +2074,6 @@
 
     const $homeVid = document.getElementById('home-preview-video');
     $homeVid?.play().catch(() => {});
-    state.inlinePlayerCtrl?.restore?.(); // B 站嵌入被暂停后恢复画面
   }
 
   $playerClose.addEventListener('click', closePlayer);
