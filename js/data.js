@@ -105,7 +105,7 @@ window.PORTFOLIO_DATA = {
           title: '第一集 · 庄园初遇',
           enTitle: 'EPISODE 01 · THE WHITE TIGER',
           duration: '00:56',
-          thumb: 'assets/images/mias-wild-wonderland-still-1.jpg',
+          thumb: 'assets/images/mias-wild-wonderland-still-1.webp',
           video: 'media/mias-wild-wonderland-ep01.mp4'
         },
         {
@@ -122,7 +122,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/mias-wild-wonderland-cover.webp',
       posterCaption: "《Mia's Wild Wonderland》官方竖版主视觉海报（含 EP01 & EP02 双集先导成片）。",
       stills: [
-        'assets/images/mias-wild-wonderland-still-1.jpg',
+        'assets/images/mias-wild-wonderland-still-1.webp',
         'assets/images/mias-wild-wonderland-still-2.jpg',
         'assets/images/mias-wild-wonderland-still-3.jpg',
         'assets/images/mias-wild-wonderland-still-4.jpg',
@@ -187,7 +187,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/the-king-of-sorrow-cover.webp',
       posterCaption: '《THE KING OF SORROW》暗黑奇幻竖版官方封面。',
       stills: [
-        'assets/images/the-king-of-sorrow-still-1.jpg',
+        'assets/images/the-king-of-sorrow-still-1.webp',
         'assets/images/the-king-of-sorrow-still-2.jpg',
         'assets/images/the-king-of-sorrow-still-3.jpg',
         'assets/images/the-king-of-sorrow-still-4.jpg',
@@ -242,7 +242,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/ceo-sweet-punishment-ep53-cover.webp',
       posterCaption: "《The CEO's Sweet Punishment EP53》竖版官方海报。",
       stills: [
-        'assets/images/ceo-sweet-punishment-ep53-still-1.jpg',
+        'assets/images/ceo-sweet-punishment-ep53-still-1.webp',
         'assets/images/ceo-sweet-punishment-ep53-still-2.jpg',
         'assets/images/ceo-sweet-punishment-ep53-still-3.jpg',
         'assets/images/ceo-sweet-punishment-ep53-still-4.jpg',
@@ -297,7 +297,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/xianmen-cover.webp',
       posterCaption: '《仙门偏养反骨人》第一集 16:9 横版官方海报。',
       stills: [
-        'assets/images/xianmen-still-1.jpg',
+        'assets/images/xianmen-still-1.webp',
         'assets/images/xianmen-still-2.jpg',
         'assets/images/xianmen-still-3.jpg',
         'assets/images/xianmen-still-4.jpg',
@@ -352,7 +352,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/xian-cover.webp',
       posterCaption: '《噩梦 ——〈陷〉》官方海报 · 导演：郜维佳。',
       stills: [
-        'assets/images/xian-still-1.jpg',
+        'assets/images/xian-still-1.webp',
         'assets/images/xian-still-2.jpg',
         'assets/images/xian-still-3.jpg',
         'assets/images/xian-still-4.jpg',
@@ -407,7 +407,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/yemiao-cover.webp',
       posterCaption: '《野庙》横版武侠概念海报。',
       stills: [
-        'assets/images/yemiao-still-1.jpg',
+        'assets/images/yemiao-still-1.webp',
         'assets/images/yemiao-still-2.jpg',
         'assets/images/yemiao-still-3.jpg',
         'assets/images/yemiao-still-4.jpg',
@@ -462,7 +462,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/sanjie-cover.webp',
       posterCaption: '《三界绒游记》官方毛毡风格横版海报 · 制作组：GHZ。',
       stills: [
-        'assets/images/sanjie-still-1.jpg',
+        'assets/images/sanjie-still-1.webp',
         'assets/images/sanjie-still-2.jpg',
         'assets/images/sanjie-still-3.jpg',
         'assets/images/sanjie-still-4.jpg',
@@ -517,7 +517,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/chunri-laixin-cover.webp',
       posterCaption: '《春日来信》林夏 × 许屿 · 青春短片官方封面。',
       stills: [
-        'assets/images/chunri-laixin-still-1.jpg',
+        'assets/images/chunri-laixin-still-1.webp',
         'assets/images/chunri-laixin-still-2.jpg',
         'assets/images/chunri-laixin-still-3.jpg',
         'assets/images/chunri-laixin-still-4.jpg',
@@ -573,7 +573,7 @@ window.PORTFOLIO_DATA = {
       thumb: 'assets/images/thumbs/rexue-qingchun-cover.webp',
       posterCaption: '《热血青春》横版燃向官方海报。',
       stills: [
-        'assets/images/rexue-qingchun-still-1.jpg',
+        'assets/images/rexue-qingchun-still-1.webp',
         'assets/images/rexue-qingchun-still-2.jpg',
         'assets/images/rexue-qingchun-still-3.jpg',
         'assets/images/rexue-qingchun-still-4.jpg',

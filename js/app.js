@@ -40,6 +40,9 @@
     lightboxIndex: 0,
     gateReady: false,
     gateRaf: null,
+    gateProgressRaf: null,
+    gateLoadTimer: null,
+    gateAutoExitTimer: null,
     inlinePlayerCtrl: null,
     modalPlayerCtrl: null
   };
@@ -743,6 +746,48 @@
     state.gateRaf = requestAnimationFrame(draw);
   }
 
+  /* ========================================================================
+     开屏进度：按真实网络下载字节推进，加载完才允许进入；
+     最多等 GATE_TIMEOUT_MS，超时直接放行。
+     ======================================================================== */
+
+  const GATE_TIMEOUT_MS = 30000;
+  const GATE_MIN_MS = 500; // 命中缓存时也至少走完一次进度，避免闪一下
+
+  /* 首屏真正需要的图：开屏拼贴缩略图 + 当前作品首帧（其余图懒加载，不拖住开屏） */
+  function gatePreloadList() {
+    const list = [];
+    const seen = new Set();
+    const add = (src) => {
+      if (!src) return;
+      let abs = '';
+      try {
+        abs = new URL(src, window.location.href).href;
+      } catch (err) {
+        return;
+      }
+      if (seen.has(abs)) return;
+      seen.add(abs);
+      list.push({ src, abs });
+    };
+    works.forEach((w) => add(w.thumb || w.poster));
+    const cur = works[state.activeWorkIndex] || works[0];
+    add(cur && cur.stills && cur.stills[0]);
+    return list;
+  }
+
+  /* 从 Resource Timing 取这张图实际下载的字节数（取不到就按 0 计，后面用平均值兜底） */
+  function resourceBytes(absUrl) {
+    try {
+      const entries = performance.getEntriesByName(absUrl);
+      const e = entries[entries.length - 1];
+      if (!e) return 0;
+      return e.encodedBodySize || e.decodedBodySize || e.transferSize || 0;
+    } catch (err) {
+      return 0;
+    }
+  }
+
   function runSplashGate(forceShow) {
     const seen = sessionStorage.getItem('portfolio_gate_seen') === '1';
     if (seen && !forceShow) {
@@ -750,6 +795,11 @@
       $gate.setAttribute('aria-hidden', 'true');
       return;
     }
+
+    // 重看开屏时清掉上一次的定时器与动画帧
+    clearTimeout(state.gateLoadTimer);
+    clearTimeout(state.gateAutoExitTimer);
+    if (state.gateProgressRaf) cancelAnimationFrame(state.gateProgressRaf);
 
     $gate.classList.remove('is-hidden', 'is-leaving');
     $gate.setAttribute('aria-hidden', 'false');
@@ -760,26 +810,112 @@
     $gateEnter.classList.remove('is-ready');
     $gateEnter.querySelector('.gate-enter-label').textContent = '正在载入';
     $gateEnter.querySelector('.gate-enter-en').textContent = 'LOADING';
-    $gateStatus.textContent = 'LOADING · 正在载入作品';
+    $gateStatus.textContent = 'LOADING · 正在读取作品';
+
+    const items = gatePreloadList().map((a) => ({ ...a, settled: false, bytes: 0 }));
+    const startedAt = performance.now();
+    let settledCount = 0;
+    let knownBytes = 0;
+    let finished = false;
+    let finishReason = '';
+    let display = 0;
+    let target = 0;
+
+    /* HTML/CSS/JS 就绪占 5%，图片下载占 5%–99%。
+       已下载字节 / 预估总字节；未完成的按已完成平均值估，越接近完成越准 */
+    const BASE_PCT = 5;
+    function estimateProgress() {
+      if (!items.length) return 99;
+      const pending = items.length - settledCount;
+      const avg = settledCount > 0 ? knownBytes / settledCount : 48 * 1024;
+      const total = knownBytes + pending * avg;
+      const ratio = total > 0 ? knownBytes / total : 0;
+      return Math.min(99, BASE_PCT + ratio * (99 - BASE_PCT));
+    }
+
+    function paint() {
+      const p = Math.round(display);
+      $gateNum.innerHTML = `${pad2(p)}<small>%</small>`;
+      $gateBarFill.style.width = `${display}%`;
+    }
+
+    function applyReady() {
+      if (state.gateReady) return;
+      state.gateReady = true;
+      $gateEnter.disabled = false;
+      $gateEnter.classList.add('is-ready');
+      $gateEnter.querySelector('.gate-enter-label').textContent = '进入作品集';
+      $gateEnter.querySelector('.gate-enter-en').textContent = 'ENTER';
+      $gateStatus.textContent =
+        finishReason === 'timeout' ? 'READY · 已就绪（超时放行）' : 'READY · 已就绪';
+      if (finishReason === 'timeout') {
+        state.gateAutoExitTimer = setTimeout(dismissGate, 700);
+      }
+    }
+
+    function tick() {
+      const diff = target - display;
+      display += Math.abs(diff) < 0.2 ? diff : diff * 0.18;
+      if (finished && display > 99.6) display = 100;
+      paint();
+      if (finished && display >= 100) {
+        if (performance.now() - startedAt >= GATE_MIN_MS) {
+          applyReady();
+          return;
+        }
+      }
+      state.gateProgressRaf = requestAnimationFrame(tick);
+    }
+
+    function finish(reason) {
+      if (finished) return;
+      finished = true;
+      finishReason = reason;
+      clearTimeout(state.gateLoadTimer);
+      target = 100;
+      // 后台标签页里 requestAnimationFrame 会暂停，用定时器兜底解锁，避免永远进不去
+      setTimeout(() => {
+        if (state.gateReady) return;
+        display = 100;
+        paint();
+        applyReady();
+      }, GATE_MIN_MS + 1200);
+    }
+
+    function settle(item) {
+      if (item.settled) return;
+      item.settled = true;
+      settledCount += 1;
+      item.bytes = resourceBytes(item.abs);
+      knownBytes += item.bytes;
+      if (settledCount >= items.length) {
+        finish('loaded');
+        return;
+      }
+      if (finished) return;
+      target = estimateProgress();
+      $gateStatus.textContent = `LOADING · 正在读取作品 ${settledCount}/${items.length}`;
+    }
+
+    // 先把网络请求发出去，再画开屏，保证进度条一出现就有真实下载在跑
+    if (!items.length) {
+      finish('loaded');
+    } else {
+      target = estimateProgress();
+      $gateStatus.textContent = `LOADING · 正在读取作品 0/${items.length}`;
+      items.forEach((item) => {
+        const img = new Image();
+        img.decoding = 'async';
+        img.onload = () => settle(item);
+        img.onerror = () => settle(item); // 失败也算结束，不卡住开屏
+        img.src = item.src;
+      });
+    }
 
     initGateCanvas();
-
-    let progress = 0;
-    const timer = setInterval(() => {
-      progress = Math.min(100, progress + (progress < 72 ? 10 : 7));
-      $gateNum.innerHTML = `${pad2(progress)}<small>%</small>`;
-      $gateBarFill.style.width = `${progress}%`;
-
-      if (progress >= 100) {
-        clearInterval(timer);
-        state.gateReady = true;
-        $gateEnter.disabled = false;
-        $gateEnter.classList.add('is-ready');
-        $gateEnter.querySelector('.gate-enter-label').textContent = '进入作品集';
-        $gateEnter.querySelector('.gate-enter-en').textContent = 'ENTER';
-        $gateStatus.textContent = 'READY · 已就绪';
-      }
-    }, 50);
+    paint();
+    state.gateProgressRaf = requestAnimationFrame(tick);
+    state.gateLoadTimer = setTimeout(() => finish('timeout'), GATE_TIMEOUT_MS);
   }
 
   function dismissGate() {
