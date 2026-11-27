@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <meta name="format-detection" content="telephone=no, email=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="郜维佳 GAO WEIJIA" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:url" content="https://g200402012022-svg.github.io/gaoweijia-portfolio/" />
+  <meta property="og:title" content="郜维佳 GAO WEIJIA · 导演 · AI 影像作品集" />
+  <meta property="og:description" content="22 岁青年导演郜维佳个人影视作品集，涵盖海外剧、漫剧、真人剧与 MV（含 Mia's Wild Wonderland 双集连播）。" />
+  <meta property="og:image" content="https://g200402012022-svg.github.io/gaoweijia-portfolio/assets/images/mias-wild-wonderland-cover.jpg" />
+  <meta property="og:image:alt" content="Mia's Wild Wonderland 主视觉" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="郜维佳 GAO WEIJIA · 导演 · AI 影像作品集" />
+  <meta name="twitter:description" content="22 岁青年导演郜维佳个人影视作品集，涵盖海外剧、漫剧、真人剧与 MV。" />
+  <meta name="twitter:image" content="https://g200402012022-svg.github.io/gaoweijia-portfolio/assets/images/mias-wild-wonderland-cover.jpg" />
+  <meta name="description" content="郜维佳 GAO WEIJIA（22 岁）— 导演与 AI 影像创作者个人作品集，涵盖海外剧、漫剧、真人剧与 MV 共 9 部原画影视作品。" />
+  <link rel="canonical" href="https://g200402012022-svg.github.io/gaoweijia-portfolio/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%230c0c0d'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='27' font-weight='700' fill='%238b6fd6' text-anchor='middle'%3EGW%3C/text%3E%3C/svg%3E" />
+  <title>郜维佳 GAO WEIJIA · 导演 · AI 影像作品集</title>
+
+  <!-- 国内可用字体镜像异步非阻塞加载，离线由系统字体栈无缝兜底 -->
+  <link rel="preconnect" href="https://fonts.loli.net" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.loli.net/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@500;700;900&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 开屏引导遮罩 (Splash Gate) -->
+  <div id="gate" class="gate" aria-hidden="false">
+    <canvas id="gate-canvas" class="gate-cv"></canvas>
+    <div class="gate-scrim"></div>
+    <div class="gate-wordmask" aria-hidden="true">
+      <span id="gate-wordmask-text">郜维佳</span>
+    </div>
+    <div class="gate-top">
+      <span class="gate-brand" id="gate-brand">郜维佳 GAO WEIJIA</span>
+      <span class="gate-count" id="gate-count">SELECTED FILMS · 09</span>
+    </div>
+    <div class="gate-center">
+      <p class="gate-sub" id="gate-sub">22 岁 · 导演 · AI 影像创作者 — Director / AI Filmmaker</p>
+      <button type="button" id="gate-enter" class="gate-enter" disabled>
+        <span class="gate-ring" aria-hidden="true"></span>
+        <span class="gate-enter-label">正在载入</span>
+        <span class="gate-enter-en">LOADING</span>
+        <span class="gate-arrow" aria-hidden="true">→</span>
+      </button>
+      <p class="gate-cue" id="gate-cue">点击进入 · 或按 Enter</p>
+    </div>
+    <div class="gate-bottom">
+      <div class="gate-num" id="gate-num">00<small>%</small></div>
+      <div class="gate-status" id="gate-status">LOADING · 正在载入作品</div>
+    </div>
+    <div class="gate-bar"><i id="gate-bar-fill"></i></div>
+  </div>
+
+  <!-- 顶部固定反色导航栏 -->
+  <header class="hdr" id="hdr">
+    <a href="#/" class="hdr-logo" data-route="#/" aria-label="返回首页">
+      <span class="hdr-logo-cn" id="hdr-logo-cn">郜维佳</span>
+      <span class="hdr-logo-en" id="hdr-logo-en">GAO WEIJIA</span>
+    </a>
+    <div class="hdr-right">
+      <span class="hdr-where" id="hdr-where">HOME · 精选</span>
+      <button
+        type="button"
+        id="menu-toggle"
+        class="note-btn"
+        aria-label="打开菜单"
+        aria-expanded="false"
+        aria-controls="drawer"
+      >
+        <span class="note-lines" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="note-close-label">CLOSE</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 侧滑抽屉菜单与遮罩 -->
+  <div id="drawer-scrim" class="note-scrim" aria-hidden="true"></div>
+  <aside id="drawer" class="note" aria-hidden="true" aria-label="全站导航菜单">
+    <div class="note-head">
+      <span class="eyebrow">MENU · 菜单</span>
+      <span class="note-hint" id="drawer-count">09 FILMS</span>
+    </div>
+    <nav class="note-links" aria-label="主导航">
+      <a href="#/" data-route="#/" class="note-link">
+        <span class="note-idx">01</span>
+        <span class="note-en">HOME</span>
+        <span class="note-cn">首页</span>
+      </a>
+      <a href="#/works" data-route="#/works" class="note-link">
+        <span class="note-idx">02</span>
+        <span class="note-en">WORKS</span>
+        <span class="note-cn">作品 · 09</span>
+      </a>
+      <a href="#/about" data-route="#/about" class="note-link">
+        <span class="note-idx">03</span>
+        <span class="note-en">ABOUT</span>
+        <span class="note-cn">关于 · 联系</span>
+      </a>
+    </nav>
+    <div class="note-selected">
+      <div class="note-sec-title">精选作品 · SELECTED</div>
+      <div id="drawer-works" class="note-works"></div>
+    </div>
+    <div class="note-foot">
+      <div>
+        <div class="note-foot-name" id="drawer-foot-name">郜维佳 GAO WEIJIA</div>
+        <div class="note-foot-role" id="drawer-foot-role">22 岁 · 导演 · AI 影像创作者</div>
+      </div>
+      <button type="button" id="replay-gate-btn" class="note-replay">重看开屏</button>
+    </div>
+  </aside>
+
+  <!-- 全屏五列百叶窗路由转场遮罩 -->
+  <div id="transition" class="tr" aria-hidden="true">
+    <div class="tr-layer tr-layer--accent">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="tr-layer tr-layer--dark">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="tr-label">
+      <div class="tr-label-en" id="tr-en">WORKS</div>
+      <div class="tr-label-cn" id="tr-cn">作品索引</div>
+    </div>
+  </div>
+
+  <!-- 主视图容器 -->
+  <main id="app" class="app"></main>
+
+  <!-- 全屏影院级播放器弹窗（与内嵌播放器统一升级控栏：前进/后退/选集/倍速/音量/画中画/全屏） -->
+  <div id="player" class="player" aria-hidden="true" role="dialog" aria-modal="true" aria-label="影片播放器">
+    <div id="player-ambient" class="player-ambient"></div>
+    <div class="player-top">
+      <div class="player-meta">
+        <span class="player-num" id="player-num">01</span>
+        <div>
+          <div class="player-title" id="player-title">影片标题</div>
+          <div class="player-en" id="player-en">FILM TITLE</div>
+        </div>
+        <span class="vctrl-badge" id="player-quality-badge">原画直出</span>
+      </div>
+      <div id="player-eps" class="player-eps"></div>
+      <button type="button" id="player-close" class="player-close" aria-label="关闭播放器">✕</button>
+    </div>
+
+    <div class="player-stage" id="player-stage">
+      <!-- 动态插入通用 .cinema-player 容器 -->
+      <div id="modal-player-mount" class="modal-player-mount"></div>
+    </div>
+  </div>
+
+  <!-- 剧照 / 二维码全屏灯箱弹窗 -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="大图浏览">
+    <button type="button" id="lb-close" class="lb-close" aria-label="关闭大图">✕</button>
+    <button type="button" id="lb-prev" class="lb-nav lb-prev" aria-label="上一张">←</button>
+    <figure class="lb-figure">
+      <img id="lb-img" class="lb-img" src="" alt="大图预览" />
+      <figcaption class="lb-cap" id="lb-cap">01 / 06</figcaption>
+    </figure>
+    <button type="button" id="lb-next" class="lb-nav lb-next" aria-label="下一张">→</button>
+  </div>
+
+  <!-- 轻量 Toast 提示 -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
