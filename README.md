@@ -16,7 +16,7 @@ css/style.css              全站样式（含影院播放器、无片源占位�
 js/data.js                 全站唯一数据源：文案、作品、联系方式、播放源
 js/app.js                  交互引擎：路由、转场、影院播放器、灯箱
 assets/images/             剧照与海报（约 6 MB）
-media/                     线上播放的网页转码版成片（10 支，约 140 MB，进仓库）
+media/                     线上播放的网页转码版成片（10 支，约 236 MB，进仓库）
 assets/videos/             原始母版（1.16 GB，不进仓库，本地留档）
 .nojekyll                  GitHub Pages 关闭 Jekyll 处理
 ```
@@ -50,8 +50,8 @@ ffmpeg -i assets/videos/源文件.mp4 -map_metadata -1 \
   media/目标文件名.mp4
 ```
 
-> 注意 GitHub Pages 单站上限 **1 GB**、月流量软上限 **100 GB**。按当前 140 MB 全站，
-> 约可支撑 700 次完整观看；访客只点开一两支时消耗远低于此。
+> 注意 GitHub Pages 单站上限 **1 GB**、月流量软上限 **100 GB**。按当前 236 MB 全站，
+> 约可支撑 420 次完整观看；访客只点开一两支时消耗远低于此。
 
 ## 三、部署（GitHub Pages）
 
