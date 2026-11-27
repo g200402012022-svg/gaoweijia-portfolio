@@ -685,7 +685,9 @@
     });
 
     function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // 手机上把 canvas 像素比压到 1.5，减少开屏动画的填充开销
+      const cap = window.innerWidth < 860 ? 1.5 : 2;
+      const dpr = Math.min(window.devicePixelRatio || 1, cap);
       $gateCanvas.width = window.innerWidth * dpr;
       $gateCanvas.height = window.innerHeight * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
